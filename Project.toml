@@ -1,0 +1,11 @@
+name = "JSXGraph"
+uuid = "97e4c2e4-f0cb-461e-a268-312dec255b76"
+authors = ["Thibaut Lienart <ltib@me.com>"]
+version = "0.1.0"
+
+[deps]
+JSExpr = "97c1335a-c9c5-57fe-bc5d-ec35cebe8660"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+
+[compat]
+JSExpr = "0.5"

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="jsxgraphcore.js"></script>
+  <link rel="stylesheet" href="jsxgraph.css" />
+  <title>JSXGraph playground</title>
+</head>
+<div id="jxgbox" class="jxgbox" style="width:500px; height:500px"></div>
+<script>
+function val(x){return x.Value();};function abs(x){return Math.abs(x);};function acos(x){return Math.acos(x);};function acosh(x){return Math.acosh(x);};function asin(x){return Math.asin(x);};function asinh(x){return Math.asinh(x);};function atan(x){return Math.atan(x);};function atanh(x){return Math.atanh(x);};function ceil(x){return Math.ceil(x);};function cos(x){return Math.cos(x);};function cosh(x){return Math.cosh(x);};function exp(x){return Math.exp(x);};function expm1(x){return Math.expm1(x);};function floor(x){return Math.floor(x);};function hypot(x){return Math.hypot(x);};function log(x){return Math.log(x);};function log1p(x){return Math.log1p(x);};function log10(x){return Math.log10(x);};function log2(x){return Math.log2(x);};function max(x){return Math.max(x);};function min(x){return Math.min(x);};function round(x){return Math.round(x);};function sign(x){return Math.sign(x);};function sin(x){return Math.sin(x);};function sinh(x){return Math.sinh(x);};function sqrt(x){return Math.sqrt(x);};function tan(x){return Math.tan(x);};function tanh(x){return Math.tanh(x);};function trunc(x){return Math.trunc(x);};function rand(){return Math.random();};const π=Math.PI; const ℯ=Math.E;brd_c4V=JXG.JSXGraph.initBoard('jxgbox',{"boundingbox":[-10.0,10.0,10.0,-10.0],"axis":false,"showcopyright":false,"shownavigation":false});a=brd_c4V.create('slider', [[0.0,0.0],[3.0,0.0],[0.0,1.5,3.0]], {name:"a",});function foo(x){return (val(a)*Math.pow(x,2))};brd_c4V.create('functiongraph', [function (x){return foo(x)}, -10.0, 10.0]);
+</script>
+</html>

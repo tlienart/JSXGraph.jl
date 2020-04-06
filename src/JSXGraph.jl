@@ -9,13 +9,11 @@ export board, gcb
 export slider
 export functiongraph, plot
 
-const JSX_ENV = Dict{Symbol,Any}(
-    :CURRENT_BOARD => nothing,
-    )
+# -----------------------------------------------
 
 abstract type Object end
 
-val = identity
+val(x) = 1 # should be overloaded by specific objects
 
 # -----------------------------------------------
 

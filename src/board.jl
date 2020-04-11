@@ -1,26 +1,34 @@
 mutable struct Board
     name::String
     objects::Vector{Object}
-    # --- board options ---
+    # --- key board options ---
     xlim::Vector{<:Real}
     ylim::Vector{<:Real}
     axis::Bool
     showcopyright::Bool
     shownavigation::Bool
+    # --- other board options --- jsxgraph.org/docs/symbols/JXG.Board.html
+    opts::Option{Dict{Symbol,Any}}
 end
-function Board(name, obj; opts...)
-    b = Board(name, obj,
-              get(opts, :xlim, [-10.0, 10.0]),
-              get(opts, :ylim, [-10.0, 10.0]),
-              get(opts, :axis, false),
-              get(opts, :showcopyright, false),
-              get(opts, :shownavigation, false))
-    ks = keys(opts)
-    if :boundingbox in keys(opts)
-        bb = opts.boundingbox
+
+function Board(name, obj;
+               xlim=[-10,10], ylim=[-10,10], axis=false,
+               showcopyright=false, shownavigation=false, kw...)
+    b = Board(name, obj, xlim, ylim, axis,
+              showcopyright, shownavigation, dict(kw...))
+    if :boundingbox ∈ keys(kw)
+        bb = kw.boundingbox
         @assert length(bb) == 4 "Bounding box must have 4 elements."
-        b.xlim = bb[1:2]
-        b.ylim = bb[[4,3]]
+        b.xlim = bb[1,3]
+        b.ylim = bb[4,2]
+    end
+    if :style ∉ keys(kw)
+        dstyle = "width:300px; height:300px;"
+        if isnothing(b.opts)
+            b.opts = Dict{Symbol,Any}(:style => dstyle)
+        else
+            b.opts[:style] = dstyle
+        end
     end
     return b
 end
@@ -42,15 +50,17 @@ Create a new board.
 Alternative
 * `boundingbox` - [xmin,xmax,ymax,ymin]
 """
-board(name="brd_"*randstring(3); opts...) = Board(name, Object[]; opts...)
+board(name="brd_"*randstring(3); kw...) = Board(name, Object[]; kw...)
 
 # ---------------------------------------------------------------------------
 
-opts(b::Board) = (
-    boundingbox = vcat(b.xlim, reverse(b.ylim)),
+get_opts(b::Board) = (
+    boundingbox = [b.xlim[1], b.ylim[2], b.xlim[2], b.ylim[1]],
     axis = b.axis,
     showcopyright = b.showcopyright,
-    shownavigation = b.shownavigation)
+    shownavigation = b.shownavigation,
+    (;b.opts...)...
+    )
 
 """
     obj |> board
@@ -74,15 +84,67 @@ const PREAMBLE =
                    :log2, :max, :min, :round, :sign, :sin, :sinh,
                    :sqrt, :tan, :tanh, :trunc)) *
     "function rand(){return Math.random();};" *
-    "const π=Math.PI; const ℯ=Math.E;"
+    "const π=Math.PI;const ℯ=Math.E;const pi=Math.PI;"
 
-function Base.write(io::IO, b::Board)
+function str(b::Board)
+    io = IOBuffer()
     print(io, PREAMBLE)
-    b_opts = opts(b)
-    jss = js"JXG.JSXGraph.initBoard('jxgbox',$b_opts);"
+    opts = get_opts(b)
+    jss = js"JXG.JSXGraph.initBoard('jxgbox',$opts);"
     print(io, "$(b.name)=" * jss.s)
     for o in b.objects
         print(io, str(o, b))
     end
+    return String(take!(io))
+end
+
+function save(fpath::String, b::Board)
+    fpath = splitext(fpath)[1] * ".js"
+    write(fpath, str(b))
     return nothing
+end
+
+# ---------------------------------------------------------------------------
+
+"""
+    standalone(b)
+
+Return self-contained HTML with Javascript ready to be displayed by itself.
+"""
+function standalone(b::Board)
+    s = """
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <script>
+          $(read(joinpath(dirname(pathof(JSXGraph)), "libs", "jsxgraphcore.js"),String))
+          </script>
+          <style>
+          $(read(joinpath(dirname(pathof(JSXGraph)), "libs", "jsxgraph.css"),String))
+          </style>
+        </head>
+        <body>
+          <div id="jxgbox" class="jxgbox" style=\"$(b.opts[:style])\"></div>
+        <script>
+          $(str(b))
+        </script>
+        </body>
+        </html>
+        """
+    return s
+end
+
+function Base.show(io::IO, b::Board)
+    if isempty(b.objects)
+        println(io, "Board $(b.name) (empty).")
+        return
+    elseif isdefined(Main, :Atom) && Main.Atom.PlotPaneEnabled[]
+        p = Blink.Page()
+        Main.Atom.ploturl(Blink.localurl(p))
+        wait(p)
+        Blink.body!(p, standalone(b))
+    else
+        w = Blink.Window()
+        Blink.body!(w, standalone(b))
+    end
 end

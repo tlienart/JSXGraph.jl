@@ -5,6 +5,12 @@ mutable struct JSFun
 end
 (jsf::JSFun)(x...) = jsf.f(x...)
 
+"""
+    @jsf
+
+Make a function usable on a board. The function can still be used as a normal
+Julia function.
+"""
 macro jsf(ex)
     if !(ex isa Expr) || ex.head ∉ (:function, :(=))
         error("@jsf only works with function definitions.")
@@ -24,11 +30,22 @@ end
 
 # ---------------------------------------------------------------------------
 
+"""
+$SIGNATURES
+
+Internal function to recover the javascript corresponding to a JSFun.
+"""
 function str(jsf::JSFun)
     rs = replace(jsf.s.s, r"\^\((.*?,.*?)\)" => s"Math.pow(\1)")
     return rs * ";"
 end
 
+"""
+$SIGNATURES
+
+Internal function to get separate strings corresponding to a JSFun to
+facilitate the use of functions in plots etc.
+"""
 function strf(f::JSFun, n::String="FN")
     fn   = String(f.fname)
     jsfn = JSString(fn)

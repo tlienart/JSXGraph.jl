@@ -1,14 +1,27 @@
 module JSXGraph
 
+# Javascript
 using JSExpr
-using Random
 
+# Display
 import Blink
 
+# Stdlib & simple things
+using Random
+using DocStringExtensions
+
+# -----------------------------------------------
+
+# board etc
+export board, gcb
+
+# defining functions
 export @jsf, val
 
-export board, gcb
+# controllers
 export slider
+
+# objects
 export functiongraph, parametriccurve, dataplot, plot
 export point
 export scatterplot, scatter

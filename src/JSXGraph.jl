@@ -30,6 +30,8 @@ export scatterplot, scatter
 
 abstract type Object end
 
+Base.length(o::Object) = 1
+
 # fallbacks overloaded by specific objects
 val(x) = 1
 

@@ -71,7 +71,7 @@ get_opts(b::Board) = (
 
 Add object(s) to board `board`.
 """
-(b::Board)(obj) = append!(b.objects, obj)
+(b::Board)(o) = length(o) > 1 ? append!(b.objects, o) : push!(b.objects, o)
 
 """
     board ++ obj
@@ -105,7 +105,13 @@ function str(b::Board)
     return String(take!(io))
 end
 
-function save(fpath::AbstractString, b::Board)
+"""
+    save(b, fpath)
+
+Save a board as a javascript file that can be plugged in a HTML file with the
+libraries.
+"""
+function save(b::Board, fpath::AbstractString)
     fpath = splitext(fpath)[1] * ".js"
     write(fpath, str(b))
     return nothing
@@ -132,7 +138,7 @@ function standalone(b::Board)
           </style>
         </head>
         <body>
-          <div id="jxgbox" class="jxgbox" style=\"$(b.opts[:style])\"></div>
+          <div id="jxgbox" class="jxgbox" style=\"$(b.style)\"></div>
         <script>
           $(str(b))
         </script>
@@ -147,6 +153,7 @@ end
 #
 # For IJulia, should manage to do it like
 # https://github.com/queryverse/VegaLite.jl/blob/2208264fe0bfd38f563f26035dd00a0153bd0c61/src/rendering/render.jl#L74
+# however this is black magic, I haven't  worked out how to  do it.
 
 function Base.show(io::IO, b::Board)
     if isempty(b.objects)

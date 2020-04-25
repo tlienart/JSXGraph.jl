@@ -45,5 +45,19 @@ end
     brd = board()
     s1 = slider("a", [[1,-1],[5,-1],[0,1.5,3]])
     brd ++ s1
-    # TODO XXX
+
+    s = J.str(brd)
+    @test occursin("function val(x)", s)
+    @test occursin(".initBoard('jxgbox',", s)
+    @test occursin(".create('slider',", s)
+
+    # -- save
+    tmp = tempname()
+    J.save(brd, tmp)
+    s = read(tmp * ".js", String)
+    @test s == J.str(brd)
+
+    # -- standalone
+    h = J.standalone(brd)
+    @test occursin(s, h)
 end

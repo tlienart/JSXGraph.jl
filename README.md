@@ -1,5 +1,9 @@
 # JSXGraph
 
+| [MacOS/Linux] | Coverage | Documentation |
+| :-----------: | :------: | :-----------: |
+| [![Build Status](https://travis-ci.org/tlienart/JSXGraph.jl.svg?branch=master)](https://travis-ci.org/tlienart/JSXGraph.jl) | [![codecov.io](http://codecov.io/github/tlienart/JSXGraph.jl/coverage.svg?branch=master)](http://codecov.io/github/tlienart/JSXGraph.jl?branch=master) | WIP
+
 [jsxgraph](https://github.com/jsxgraph/jsxgraph) is a nice project to have interactive plots in the browser, it's a bit like Plotly except more geared towards maths and interactivity.
 
 This package aims to help generate JSXGraph code that can then be plugged in a statically served website (for instance one you would generate via [Franklin.jl](https://github.com/tlienart/Franklin.jl)).

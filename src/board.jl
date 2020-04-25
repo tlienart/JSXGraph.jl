@@ -16,11 +16,12 @@ function Board(name, obj;
                xlim=[-10,10], ylim=[-10,10], axis=false,
                showcopyright=false, shownavigation=false,
                style="width:300px; height:300px;", kw...)
+    d = dict(kw...)
     b = Board(name, obj, xlim, ylim, axis,
               showcopyright, shownavigation,
-              style, dict(kw...))
-    if :boundingbox ∈ keys(kw)
-        bb = kw.boundingbox
+              style, d)
+    if !isnothing(d) && :boundingbox ∈ keys(d)
+        bb = d[:boundingbox]
         @assert length(bb) == 4 "Bounding box must have 4 elements."
         b.xlim = bb[1,3]
         b.ylim = bb[4,2]
@@ -66,9 +67,7 @@ get_opts(b::Board) = (
 
 Add object(s) to board `board`.
 """
-(b::Board)(obj::Object) = push!(b.objects, obj)
-(b::Board)(obj::Union{Vector{Object},NTuple{N,Object} where N}) =
-    append!(b.objects, obj)
+(b::Board)(obj) = append!(b.objects, obj)
 
 # ---------------------------------------------------------------------------
 
@@ -95,7 +94,7 @@ function str(b::Board)
     return String(take!(io))
 end
 
-function save(fpath::String, b::Board)
+function save(fpath::AbstractString, b::Board)
     fpath = splitext(fpath)[1] * ".js"
     write(fpath, str(b))
     return nothing

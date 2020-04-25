@@ -1,8 +1,11 @@
-using Test, JSXGraph
+using Test, JSXGraph, JSExpr
 
 const J = JSXGraph
 
-include("jsf.jl")
+include("utils.jl")
+include("jsfun.jl")
+
+# --- 
 
 include("board.jl")
 

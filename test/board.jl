@@ -13,5 +13,5 @@
     @test brd.ylim == [3,4]
     @test brd.axis
 
-    @test brd.name == gcb().name
+    @test_throws AssertionError board(boundingbox=[1,2])
 end

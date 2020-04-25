@@ -1,3 +1,9 @@
+"""
+    JSFun
+
+Wraps around a Julia function keeping track of its name and javascript
+representation.
+"""
 mutable struct JSFun
     f::Function
     s::JSString
@@ -54,16 +60,19 @@ function strf(f::JSFun, n::String="FN")
     fss  = js"function(t){return $jsn(t);}"
     return fs, fss, "INSERT_$n" => fn
 end
-
 function strf(x::Real, ::String="")
     fss = JSString("$x")
     return "", fss, nothing
 end
 
-replacefn(s::String, ::Nothing) = s
-replacefn(s::String, p::Pair) = replace(s, p)
+"""
+$SIGNATURES
 
-function replacefn(s::String, ps...)
+Internal function to replace a function insertion.
+"""
+replacefn(s::AbstractString, ::Nothing) = s
+replacefn(s::AbstractString, p::Pair) = replace(s, p)
+function replacefn(s::AbstractString, ps...)
     for p in ps
         s = replacefn(s, p)
     end

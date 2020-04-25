@@ -13,7 +13,7 @@ using DocStringExtensions
 # -----------------------------------------------
 
 # board etc
-export board, gcb
+export board, gcb, (++)
 
 # defining functions
 export @jsf, val

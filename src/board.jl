@@ -1,3 +1,8 @@
+"""
+    Board
+
+Parent element which encapsulates all objects (sliders, points, curves, ...).
+"""
 mutable struct Board
     name::String
     objects::Vector{Object}
@@ -11,7 +16,6 @@ mutable struct Board
     # --- other board options --- jsxgraph.org/docs/symbols/JXG.Board.html
     opts::Option{Dict{Symbol,Any}}
 end
-
 function Board(name, obj;
                xlim=[-10,10], ylim=[-10,10], axis=false,
                showcopyright=false, shownavigation=false,
@@ -57,7 +61,7 @@ get_opts(b::Board) = (
     axis = b.axis,
     showcopyright = b.showcopyright,
     shownavigation = b.shownavigation,
-    (;b.opts...)...
+    (isnothing(b.opts) ? (;) : (;b.opts...))...
     )
 
 """
@@ -68,6 +72,13 @@ get_opts(b::Board) = (
 Add object(s) to board `board`.
 """
 (b::Board)(obj) = append!(b.objects, obj)
+
+"""
+    board ++ obj
+
+Same as `obj |> board`.
+"""
+++(b::Board, obj) = b(obj)
 
 # ---------------------------------------------------------------------------
 

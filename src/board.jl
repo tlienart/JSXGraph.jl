@@ -61,7 +61,7 @@ get_opts(b::Board) = (
     axis = b.axis,
     showcopyright = b.showcopyright,
     shownavigation = b.shownavigation,
-    (isnothing(b.opts) ? (;) : (;b.opts...))...
+    (isnothing(b.opts) ? () : (;b.opts...))...
     )
 
 """

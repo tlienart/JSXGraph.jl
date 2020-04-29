@@ -2,3 +2,4 @@ sandbox/
 *DS_Store
 sandbox.js
 Manifest.toml
+__site/

@@ -15,6 +15,8 @@ import OrderedCollections: LittleDict
 
 # board etc
 export board, gcb, (++)
+# save
+export save, str
 
 # defining functions
 export @jsf, val

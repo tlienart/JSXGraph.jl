@@ -7,8 +7,8 @@ mutable struct FunctionGraph <: Object
     f::JSFun
     a::Union{Nothing,<:Real}
     b::Union{Nothing,<:Real}
-    # --- other board options --- jsxgraph.org/docs/symbols/Slider.html
-    opts::Option{Dict{Symbol,Any}}
+    # --- other board options --- jsxgraph.org/docs/symbols/Functiongraph.html
+    opts::Option{LittleDict{Symbol,Any}}
 end
 
 """
@@ -19,7 +19,7 @@ end
 * `b` - optionall set the maximum value of `x`
 """
 function functiongraph(f::JSFun; a=nothing, b=nothing, kw...)
-    return FunctionGraph(f, a, b, dict(kw...))
+    return FunctionGraph(f, a, b, dict(;kw...))
 end
 
 # ---------------------------------------------------------------------------
@@ -43,23 +43,24 @@ mutable struct ParametricCurve{X<:FR,Y<:FR,A<:FR,B<:FR} <: Curve{X,Y,A,B}
     a::A
     b::B
     # -- opts -- jsxgraph.org/docs/symbols/Curve.html
-    opts::Option{Dict{Symbol,Any}}
+    opts::Option{LittleDict{Symbol,Any}}
 end
 function parametriccurve(f::FR, g::FR; a::Option{FR}=nothing,
                          b::Option{FR}=nothing, kw...)
     isnothing(a) && (a = -10)
     isnothing(b) && (b = 10)
-    return ParametricCurve(f, g, a, b, dict(kw...))
+    return ParametricCurve(f, g, a, b, dict(;kw...))
 end
+pcurve = parametriccurve
 
 mutable struct DataPlot{X<:AR,Y<:AFR} <: Curve{X,Y,Nothing,Nothing}
     x::X
     y::Y
     # -- opts -- jsxgraph.org/docs/symbols/Curve.html
-    opts::Option{Dict{Symbol,Any}}
+    opts::Option{LittleDict{Symbol,Any}}
 end
-dataplot(x::AR, y::JSFun; kw...) = DataPlot(x, y, dict(kw...))
-dataplot(x::AR, y::AR; kw...) = (check_dims(x, y); DataPlot(x, y, dict(kw...)))
+dataplot(x::AR, y::JSFun; kw...) = DataPlot(x, y, dict(;kw...))
+dataplot(x::AR, y::AR; kw...) = (check_dims(x, y); DataPlot(x, y, dict(;kw...)))
 
 # ---------------------------------------------------------------------------
 

@@ -1,7 +1,7 @@
 @testset "JSFun-1" begin
     @jsf bar(x) = 5x+4
     @test bar isa J.JSFun
-    @test bar.fname == :bar
+    @test bar.name == :bar
     @test bar(5) == 5*5+4
     @test J.str(bar) == "function bar(x){return ((5*x)+4)};"
 

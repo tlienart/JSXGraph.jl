@@ -9,6 +9,7 @@ import Blink
 # Stdlib & simple things
 using Random
 using DocStringExtensions
+import OrderedCollections: LittleDict
 
 # -----------------------------------------------
 
@@ -22,7 +23,7 @@ export @jsf, val
 export slider
 
 # objects
-export functiongraph, parametriccurve, dataplot, plot
+export functiongraph, parametriccurve, pcurve, dataplot, plot
 export point
 export scatterplot, scatter
 

@@ -1,11 +1,11 @@
 mutable struct Point{X<:FR,Y<:FR} <: Object
     x::X
     y::Y
-    opts::Option{Dict{Symbol,Any}}
+    opts::Option{LittleDict{Symbol,Any}}
 end
 
-point(x::FR, y::FR; kw...) = Point(x, y, dict(kw...))
-point(x::FR, y::FR, d::Dict{Symbol,Any}) = Point(x, y, d)
+point(x::FR, y::FR; kw...) = Point(x, y, dict(;kw...))
+point(x::FR, y::FR, d::LittleDict{Symbol,Any}) = Point(x, y, d)
 
 function str(p::Point, b::Board)
     xs, xss, xrp = strf(p.x, "FX")

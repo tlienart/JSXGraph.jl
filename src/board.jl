@@ -14,13 +14,13 @@ mutable struct Board
     shownavigation::Bool
     style::String
     # --- other board options --- jsxgraph.org/docs/symbols/JXG.Board.html
-    opts::Option{Dict{Symbol,Any}}
+    opts::Option{LittleDict{Symbol,Any}}
 end
 function Board(name, obj;
                xlim=[-10,10], ylim=[-10,10], axis=false,
                showcopyright=false, shownavigation=false,
                style="width:300px; height:300px;", kw...)
-    d = dict(kw...)
+    d = dict(;kw...)
     b = Board(name, obj, xlim, ylim, axis,
               showcopyright, shownavigation,
               style, d)
@@ -79,6 +79,7 @@ Add object(s) to board `board`.
 Same as `obj |> board`.
 """
 ++(b::Board, obj) = b(obj)
+++(obj, b::Board) = b(obj)
 
 # ---------------------------------------------------------------------------
 

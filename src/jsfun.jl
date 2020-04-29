@@ -7,7 +7,7 @@ representation.
 mutable struct JSFun
     f::Function
     s::JSString
-    fname::Symbol
+    name::Symbol
 end
 (jsf::JSFun)(x...) = jsf.f(x...)
 
@@ -30,7 +30,7 @@ macro jsf(ex)
 end
 
 function Base.show(io::IO, jsf::JSFun)
-    println(io, "JSFun: $(jsf.fname)")
+    println(io, "JSFun: $(jsf.name)")
     return nothing
 end
 
@@ -53,7 +53,7 @@ Internal function to get separate strings corresponding to a JSFun to
 facilitate the use of functions in plots etc.
 """
 function strf(f::JSFun, n::String="FN")
-    fn   = String(f.fname)
+    fn   = String(f.name)
     jsfn = JSString(fn)
     jsn  = JSString("INSERT_$n")
     fs   = str(f)

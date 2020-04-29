@@ -63,4 +63,6 @@ include("objects/curves.jl")
 include("objects/geom.jl")
 include("objects/extras.jl")
 
+include("display.jl")
+
 end # module

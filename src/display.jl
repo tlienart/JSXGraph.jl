@@ -21,7 +21,7 @@ function standalone(b::Board; full=false, preamble=true)
             <body>
             """
     end
-    s *= """<div id="jxgbox" class="jxgbox" style=\"$(b.style)\"></div>
+    s *= """<div id="$(b.name)" class="jxgbox" style=\"$(b.style)\"></div>
          <script>$(str(b, preamble=preamble))</script>"""
     if full
         s *= """</body></html>"""

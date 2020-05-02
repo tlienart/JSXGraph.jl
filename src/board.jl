@@ -114,7 +114,7 @@ function str(b::Board; preamble=true)
     end
     # objects
     opts = get_opts(b)
-    jss = js"JXG.JSXGraph.initBoard('jxgbox',$opts);"
+    jss = js"JXG.JSXGraph.initBoard($(b.name),$opts);"
     print(io, "$(b.name)=" * jss.s)
     for o in b.objects
         print(io, str(o, b))

@@ -1,80 +1,122 @@
-using JSXGraph
-
 # FunctionGraph
-begin
+
+@testset "ex-fg" begin
     b = board("brd", shownavigation=true, showscreenshot=true)
-    slider("a", [[1,-1],[5,-1],[0,1.5,3]]) |> b
-    @jsf foo(x) = val(a)*x^2
-    functiongraph(foo, dash=2) |> b
-    b
+    b ++ slider("a", [[1,-1],[5,-1],[0,1.5,3]])
+    b ++ @jsf foo(x) = val(a)*x^2
+    b ++ functiongraph(foo, dash=2)
+    s = str(b, preamble=false)
+    @test isapproxstr(s, """
+        function foo(x){return (val(a)*Math.pow(x,2))};
+        brd = JXG.JSXGraph.initBoard(
+                'jxgbox',
+                {"boundingbox":[-10,10,10,-10],
+                 "axis":false,
+                 "showcopyright":false,
+                 "shownavigation":true,
+                 "showscreenshot":true});
+        a = brd.create(
+                'slider',
+                [[1.0,-1.0],[5.0,-1.0],[0.0,1.5,3.0]],
+                {});
+        brd.create(
+                'functiongraph',
+                [function(t){return foo(t);}, -10, 10],
+                {"dash":2});
+        """)
 end
 
 # ParametricCurve
-begin
-    brd = board("brd", xlim=[-1, 15], ylim=[-0.5, 2.5])
+@testset "ex-pc" begin
+    b = board("brd", xlim=[-1, 15], ylim=[-0.5, 2.5])
     @jsf f1(t) = t - sin(t)
     @jsf f2(t) = 1 - cos(t)
-    slider("T", [[0,2.1],[3,2.1],[0,π,5π]]) |> brd
+    sT = slider("T", [[0,2.1],[3,2.1],[0,π,5π]])
     @jsf fb() = val(T)
     @jsf pa() = f1(val(T))
     @jsf pb() = f2(val(T))
-    plot(f1, f2; a=0, b=fb, dash=2) |> brd
-    point(pa, pb, withlabel=false) |> brd
-    brd
+    b ++ (f1, f2, sT, fb, pa, pb)
+    b ++ plot(f1, f2; a=0, b=fb, dash=2)
+    b ++ point(pa, pb, withlabel=false)
+    s = str(b, preamble=false)
+    @test isapproxstr(s, """
+        function f1(t){return (t-sin(t))};
+        function f2(t){return (1-cos(t))};
+        function fb(){return val(T)};
+        function pa(){return f1(val(T))};
+        function pb(){return f2(val(T))};
+        brd=JXG.JSXGraph.initBoard(
+                'jxgbox',
+                {"boundingbox":[-1.0,2.5,15.0,-0.5],
+                "axis":false,
+                "showcopyright":false,
+                "shownavigation":false});
+        T=brd.create(
+                'slider',
+                [[0.0,2.1],[3.0,2.1],[0.0,3.141592653589793,15.707963267948966]], {});
+        brd.create(
+                'curve',
+                [function(t){return f1(t);}, function(t){return f2(t);},
+                  0, function(t){return fb(t);}],
+                {"dash":2});
+        brd.create(
+                'point',
+                [function(t){return pa(t);}, function(t){return pb(t);}],
+                {"withlabel":false});
+        """)
 end
 
 # DataPlot
-begin
-    brd = board("brd", xlim=[0, 1], ylim=[0, 1])
-    x = rand(10)
-    y = rand(10)
-    plot(x, y) |> brd
-    brd
-end
-
-# Point
-begin
-    brd = board("brd", xlim=[0,1], ylim=[0,1])
-    point(0.5, 0.5, strokecolor="blue", fillcolor="blue", name="hello") |> brd
-    slider("b", [[0.1,0.1],[0.6,0.1],[0,0.2,1]]) |> brd
-    @jsf m() = val(b)
-    point(0.7, m, strokecolor="blue") |> brd
-    brd
-end
-
-# Scatter
-begin
-    brd = board("brd", xlim=[0,1], ylim=[0,1])
-    scatter(rand(5), rand(5), strokecolor="blue", withlabel=false) |> brd
-    brd
-end
-
-# Scatter + fun
-begin
-    brd = board("brd", xlim=[0,1], ylim=[0,1])
-    slider("a", [[0.1,0.1],[0.6,0.1],[0,0.2,1]]) |> brd
-    @jsf foo() = val(a)
-    scatter(rand(5), foo, strokecolor="blue", withlabel=false) |> brd
-    brd
+@testset "ex-dp" begin
+    b = board("b", xlim=[0, 1], ylim=[0, 1])
+    x = [1,2,3,4]
+    y = [1,2,3,4]
+    b ++ plot(x, y)
+    s = str(b, preamble=false)
+    @test isapproxstr(s, """
+        b=JXG.JSXGraph.initBoard(
+                'jxgbox',
+                {"boundingbox":[0,1,1,0],
+                "axis":false,
+                "showcopyright":false,
+                "shownavigation":false});
+        b.create('curve', [[1,2,3,4], [1,2,3,4]], {});
+        """)
 end
 
 # Lissajou
-begin
-    brd = board("brd", xlim=[-12, 12], ylim=[-10,10])
-    slider("a", [[2,8],[6,8],[0,3,6]]) |> brd
-    slider("b", [[2,7],[6,7],[0,2,6]]) |> brd
-    slider("A", [[2,6],[6,6],[0,3,6]]) |> brd
-    slider("B", [[2,5],[6,5],[0,3,6]]) |> brd
-    slider("delta", [[2,4],[6,4],[0,0,π]], name="&delta;") |> brd
+@testset "ex-li" begin
+    b = board("brd", xlim=[-12, 12], ylim=[-10,10])
+    b ++ (
+        slider("a", [[2,8],[6,8],[0,3,6]]),
+        slider("b", [[2,7],[6,7],[0,2,6]]),
+        slider("A", [[2,6],[6,6],[0,3,6]]),
+        slider("B", [[2,5],[6,5],[0,3,6]]),
+        slider("delta", [[2,4],[6,4],[0,0,π]], name="&delta;")
+        )
     @jsf f1(t) = val(A)*sin(val(a)*t+val(delta))
     @jsf f2(t) = val(B)*sin(val(b)*t)
-    plot(f1, f2, a=0, b=2π, strokecolor="#aa2233", strokewidth=3) |> brd
-    brd
+    b ++ plot(f1, f2, a=0, b=2π, strokecolor="#aa2233", strokewidth=3)
+    s = str(b, preamble=false)
+    @test isapproxstr(s, """
+        brd=JXG.JSXGraph.initBoard(
+                'jxgbox',
+                {"boundingbox":[-12,10,12,-10],
+                "axis":false,
+                "showcopyright":false,
+                "shownavigation":false});
+        a=brd.create('slider', [[2,8],[6,8],[0,3,6]], {});
+        b=brd.create('slider', [[2,7],[6,7],[0,2,6]], {});
+        A=brd.create('slider', [[2,6],[6,6],[0,3,6]], {});
+        B=brd.create('slider', [[2,5],[6,5],[0,3,6]], {});
+        delta=brd.create('slider', [[2.0,4.0],[6.0,4.0],[0.0,0.0,3.141592653589793]], {"name":"&delta;"});
+        function f1(t){return (val(A)*sin(((val(a)*t)+val(delta))))};
+        function f2(t){return (val(B)*sin((val(b)*t)))};
+        brd.create(
+                'curve',
+                [function(t){return f1(t);}, function(t){return f2(t);},
+                 0, 6.283185307179586],
+                {"strokecolor":"#aa2233",
+                "strokewidth":3});
+        """)
 end
-
-
-var c = brd.create('curve',[
-          function(t){return A.Value()*Math.sin(a.Value()*t+delta.Value());},
-          function(t){return B.Value()*Math.sin(b.Value()*t);},
-          0, 2*Math.PI],{strokeColor:'#aa2233',strokeWidth:3});
-brd.unsuspendUpdate();

@@ -41,8 +41,9 @@ $SIGNATURES
 
 Internal function to recover the javascript corresponding to a JSFun.
 """
-function str(jsf::JSFun)
-    rs = replace(jsf.s.s, r"\^\((.*?,.*?)\)" => s"Math.pow(\1)")
+function str(f::JSFun, b=nothing)
+    isdef(f, b) && return ""
+    rs = replace(f.s.s, r"\^\((.*?,.*?)\)" => s"Math.pow(\1)")
     return rs * ";"
 end
 
@@ -50,17 +51,18 @@ end
 $SIGNATURES
 
 Internal function to get separate strings corresponding to a JSFun to
-facilitate the use of functions in plots etc.
+facilitate the use of functions in plots etc. If a board is given, we first
+check whether the given function has already been defined or not.
 """
-function strf(f::JSFun, n::String="FN")
+function strf(f::JSFun, n::String="FN", b=nothing)
     fn   = String(f.name)
     jsfn = JSString(fn)
     jsn  = JSString("INSERT_$n")
-    fs   = str(f)
+    fs   = str(f, b)
     fss  = js"function(t){return $jsn(t);}"
     return fs, fss, "INSERT_$n" => fn
 end
-function strf(x::Real, ::String="")
+function strf(x::Real, ::String="", b=nothing)
     fss = JSString("$x")
     return "", fss, nothing
 end

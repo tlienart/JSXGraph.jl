@@ -1,29 +1,31 @@
 """
-    standalone(b)
+    standalone(b; full)
 
 Internal function to return self-contained HTML with Javascript ready to be
 displayed.
 """
-function standalone(b::Board)
-    s = """
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <script>
-          $(read(joinpath(dirname(pathof(JSXGraph)), "libs", "jsxgraphcore.js"),String))
-          </script>
-          <style>
-          $(read(joinpath(dirname(pathof(JSXGraph)), "libs", "jsxgraph.css"),String))
-          </style>
-        </head>
-        <body>
-          <div id="jxgbox" class="jxgbox" style=\"$(b.style)\"></div>
-        <script>
-          $(str(b))
-        </script>
-        </body>
-        </html>
-        """
+function standalone(b::Board; full=false)
+    s = ""
+    if full
+        s = """
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <script>
+              $(read(joinpath(dirname(pathof(JSXGraph)), "libs", "jsxgraphcore.js"),String))
+              </script>
+              <style>
+              $(read(joinpath(dirname(pathof(JSXGraph)), "libs", "jsxgraph.css"),String))
+              </style>
+            </head>
+            <body>
+            """
+    end
+    s *= """<div id="jxgbox" class="jxgbox" style=\"$(b.style)\"></div>
+         <script>$(str(b))</script>"""
+    if full
+        s *= """</body></html>"""
+    end
     return s
 end
 
@@ -36,16 +38,20 @@ end
 
 function Base.show(io::IO, b::Board)
     if isempty(b.objects)
-        println(io, "Board $(b.name) (empty).")
+        if isempty(b.functions)
+            println(io, "Board $(b.name) (empty).")
+        else
+            println(io, "Board $(b.name) (no objects).")
+        end
         return
     elseif isdefined(Main, :Atom) && Main.Atom.PlotPaneEnabled[]
         p = Blink.Page()
         Main.Atom.ploturl(Blink.localurl(p))
         wait(p)
-        Blink.body!(p, standalone(b))
+        Blink.body!(p, standalone(b, full=true))
     else
         w = Blink.Window()
-        Blink.body!(w, standalone(b))
+        Blink.body!(w, standalone(b, full=true))
     end
     return nothing
 end

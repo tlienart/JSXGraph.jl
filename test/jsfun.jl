@@ -41,3 +41,12 @@ end
     @test J.replacefn(jss.s, p, p2) ==
         ".create('functiongraph', [function(t){return foo(t);}, function(t){return bar(t);}, 0, 1])"
 end
+
+@testset "isdef" begin
+    b = board("b")
+    b ++ (@jsf foo(x) = 5x)
+    # it's already defined
+    @test str(foo, b) == ""
+    # it will be on the board
+    @test occursin("function foo(x){return (5*x)};", str(b, preamble=false))
+end

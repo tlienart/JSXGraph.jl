@@ -15,3 +15,18 @@ $SIGNATURES
 Internal function to unpack kwargs.
 """
 dict(;kw...) = isempty(kw) ? nothing : LittleDict{Symbol,Any}(kw)
+
+"""
+$SIGNATURES
+
+Check if a function has already been defined on the board and is available
+by checking the current functions in reverse order. Note that you could fool
+this system but it should be ok in most standard cases.
+"""
+function isdef(f, b)
+    isnothing(b) && return false
+    fl = findlast(fc -> fc.name == f.name, b.functions)
+    isnothing(fl) && return false
+    fc = b.functions[fl]
+    return fc.s == f.s
+end

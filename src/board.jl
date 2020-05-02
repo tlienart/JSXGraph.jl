@@ -5,6 +5,7 @@ Parent element which encapsulates all objects (sliders, points, curves, ...).
 """
 mutable struct Board
     name::String
+    functions::Vector{JSFun}
     objects::Vector{Object}
     # --- key board options ---
     xlim::Vector{<:Real}
@@ -16,12 +17,12 @@ mutable struct Board
     # --- other board options --- jsxgraph.org/docs/symbols/JXG.Board.html
     opts::Option{LittleDict{Symbol,Any}}
 end
-function Board(name, obj;
+function Board(name, funs, objs;
                xlim=[-10,10], ylim=[-10,10], axis=false,
                showcopyright=false, shownavigation=false,
                style="width:300px; height:300px;", kw...)
     d = dict(;kw...)
-    b = Board(name, obj, xlim, ylim, axis,
+    b = Board(name, funs, objs, xlim, ylim, axis,
               showcopyright, shownavigation,
               style, d)
     if !isnothing(d) && :boundingbox ∈ keys(d)
@@ -52,7 +53,7 @@ Create a new board.
 
 You can also use any of the keywords from https://jsxgraph.org/docs/symbols/JXG.Board.html.
 """
-board(name="brd_"*randstring(3); kw...) = Board(name, Object[]; kw...)
+board(name="brd_"*randstring(3); kw...) = Board(name, JSFun[], Object[]; kw...)
 
 # ---------------------------------------------------------------------------
 
@@ -65,21 +66,30 @@ get_opts(b::Board) = (
     )
 
 """
-    obj |> board
-    (obj1, obj2, ...) |> board
-    [obj1, obj2, ...] |> board
+    o |> board
+    (o1, o2, ...) |> board
+    [o1, o2, ...] |> board
 
 Add object(s) to board `board`.
 """
-(b::Board)(o) = length(o) > 1 ? append!(b.objects, o) : push!(b.objects, o)
+(b::Board)(j::JSFun)  = push!(b.functions, j)
+(b::Board)(o::Object) = push!(b.objects, o)
+(b::Board)(o) = (b.(o); b)
 
 """
-    board ++ obj
+    board ++ o
 
-Same as `obj |> board`.
+Same as `o |> board`.
 """
-++(b::Board, obj) = b(obj)
-++(obj, b::Board) = b(obj)
+++(b::Board, o) = b(o)
+++(o, b::Board) = b(o)
+
+"""
+    empty!(board)
+
+Removes everything on the board
+"""
+Base.empty!(b::Board) = (empty!(b.functions); empty!(b.objects); b)
 
 # ---------------------------------------------------------------------------
 
@@ -94,9 +104,15 @@ const PREAMBLE =
     "function rand(){return Math.random();};" *
     "const π=Math.PI;const ℯ=Math.E;const pi=Math.PI;"
 
-function str(b::Board)
+function str(b::Board; preamble=true)
     io = IOBuffer()
-    print(io, PREAMBLE)
+    # preamble
+    preamble && print(io, PREAMBLE)
+    # functions
+    for f in b.functions
+        print(io, str(f))
+    end
+    # objects
     opts = get_opts(b)
     jss = js"JXG.JSXGraph.initBoard('jxgbox',$opts);"
     print(io, "$(b.name)=" * jss.s)

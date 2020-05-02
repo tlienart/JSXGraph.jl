@@ -58,6 +58,6 @@ end
     @test s == J.str(brd)
 
     # -- standalone
-    h = J.standalone(brd)
+    h = J.standalone(brd, full=true)
     @test occursin(s, h)
 end

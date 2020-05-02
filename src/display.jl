@@ -4,7 +4,7 @@
 Internal function to return self-contained HTML with Javascript ready to be
 displayed.
 """
-function standalone(b::Board; full=false)
+function standalone(b::Board; full=false, preamble=true)
     s = ""
     if full
         s = """
@@ -22,7 +22,7 @@ function standalone(b::Board; full=false)
             """
     end
     s *= """<div id="jxgbox" class="jxgbox" style=\"$(b.style)\"></div>
-         <script>$(str(b))</script>"""
+         <script>$(str(b, preamble=preamble))</script>"""
     if full
         s *= """</body></html>"""
     end

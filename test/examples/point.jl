@@ -8,10 +8,10 @@ begin
         point(0.7, m, strokecolor="blue")
         )
     s = str(b, preamble=false)
-    @test isapproxstr(s, """
+    @test isapproxstr(s, """(function(divID){
         function m(){return val(b)};
         brd=JXG.JSXGraph.initBoard(
-                'jxgbox',
+                divID,
                 {"boundingbox":[0,1,1,0],
                 "axis":false,
                 "showcopyright":false,
@@ -28,6 +28,6 @@ begin
         brd.create(
                 'point',
                 [0.7, function(t){return m(t);}],
-                {"strokecolor":"blue"});
+                {"strokecolor":"blue"});})('brd');
         """)
 end

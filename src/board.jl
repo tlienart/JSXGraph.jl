@@ -114,12 +114,13 @@ function str(b::Board; preamble=true)
     end
     # objects
     opts = get_opts(b)
-    jss = js"JXG.JSXGraph.initBoard($(b.name),$opts);"
+    jss = js"JXG.JSXGraph.initBoard(divID,$opts);"
     print(io, "$(b.name)=" * jss.s)
     for o in b.objects
         print(io, str(o, b))
     end
-    return String(take!(io))
+    s = "(function(divID){" * String(take!(io)) * "})('$(b.name)');"
+    return s
 end
 
 """

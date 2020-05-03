@@ -42,13 +42,13 @@ end
 end
 
 @testset "board-str" begin
-    brd = board()
+    brd = board("brd")
     s1 = slider("a", [[1,-1],[5,-1],[0,1.5,3]])
     brd ++ s1
 
     s = J.str(brd)
     @test occursin("function val(x)", s)
-    @test occursin(".initBoard('jxgbox',", s)
+    @test occursin(".initBoard(divID,", s)
     @test occursin(".create('slider',", s)
 
     # -- save

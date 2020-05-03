@@ -6,10 +6,10 @@
     b ++ @jsf foo(x) = val(a)*x^2
     b ++ functiongraph(foo, dash=2)
     s = str(b, preamble=false)
-    @test isapproxstr(s, """
+    @test isapproxstr(s, """(function(divID){
         function foo(x){return (val(a)*Math.pow(x,2))};
         brd = JXG.JSXGraph.initBoard(
-                'jxgbox',
+                divID,
                 {"boundingbox":[-10,10,10,-10],
                  "axis":false,
                  "showcopyright":false,
@@ -22,7 +22,7 @@
         brd.create(
                 'functiongraph',
                 [function(t){return foo(t);}, -10, 10],
-                {"dash":2});
+                {"dash":2});})('brd');
         """)
 end
 
@@ -39,14 +39,14 @@ end
     b ++ plot(f1, f2; a=0, b=fb, dash=2)
     b ++ point(pa, pb, withlabel=false)
     s = str(b, preamble=false)
-    @test isapproxstr(s, """
+    @test isapproxstr(s, """(function(divID){
         function f1(t){return (t-sin(t))};
         function f2(t){return (1-cos(t))};
         function fb(){return val(T)};
         function pa(){return f1(val(T))};
         function pb(){return f2(val(T))};
         brd=JXG.JSXGraph.initBoard(
-                'jxgbox',
+                divID,
                 {"boundingbox":[-1.0,2.5,15.0,-0.5],
                 "axis":false,
                 "showcopyright":false,
@@ -62,7 +62,7 @@ end
         brd.create(
                 'point',
                 [function(t){return pa(t);}, function(t){return pb(t);}],
-                {"withlabel":false});
+                {"withlabel":false});})('brd');
         """)
 end
 
@@ -73,14 +73,14 @@ end
     y = [1,2,3,4]
     b ++ plot(x, y)
     s = str(b, preamble=false)
-    @test isapproxstr(s, """
+    @test isapproxstr(s, """(function(divID){
         b=JXG.JSXGraph.initBoard(
-                'jxgbox',
+                divID,
                 {"boundingbox":[0,1,1,0],
                 "axis":false,
                 "showcopyright":false,
                 "shownavigation":false});
-        b.create('curve', [[1,2,3,4], [1,2,3,4]], {});
+        b.create('curve', [[1,2,3,4], [1,2,3,4]], {});})('b');
         """)
 end
 
@@ -98,9 +98,9 @@ end
     @jsf f2(t) = val(B)*sin(val(b)*t)
     b ++ plot(f1, f2, a=0, b=2π, strokecolor="#aa2233", strokewidth=3)
     s = str(b, preamble=false)
-    @test isapproxstr(s, """
+    @test isapproxstr(s, """(function(divID){
         brd=JXG.JSXGraph.initBoard(
-                'jxgbox',
+                divID,
                 {"boundingbox":[-12,10,12,-10],
                 "axis":false,
                 "showcopyright":false,
@@ -117,6 +117,6 @@ end
                 [function(t){return f1(t);}, function(t){return f2(t);},
                  0, 6.283185307179586],
                 {"strokecolor":"#aa2233",
-                "strokewidth":3});
+                "strokewidth":3});})('brd');
         """)
 end

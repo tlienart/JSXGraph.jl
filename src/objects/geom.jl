@@ -14,3 +14,20 @@ function str(p::Point, b::Board)
     jss = js".create('point', [$xss, $yss], $opts);"
     return xs * ys * b.name * replacefn(jss.s, xrp, yrp)
 end
+
+mutable struct Segment <: Object
+    a::String
+    b::String
+    opts::Option{LittleDict{Symbol,Any}}
+end
+
+segment(a::String, b::String; kw...) = Segment(a, b, dict(;kw...))
+segment(a::String, b::String, d::LittleDict{Symbol,Any}) = Segment(a, b, d)
+
+function str(s::Segment, b::Board)
+    opts = get_opts(s)
+    sa, sb = s.a, s.b
+    jss = js".create('segment', [$sa, $sb], $opts);"
+    arp = "INSERT_$(sa)_$(sb)" => opts.name
+    return b.name * replacefn(jss.s, arp)
+end

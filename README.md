@@ -10,7 +10,7 @@ This package aims to help generate JSXGraph code from Julia code that can then b
 
 ## Getting started
 
-Check out [this page]() for a gallery of examples and explanations.
+Check out [this page](https://tlienart.github.io/JSXGraphWeb/) for a gallery of examples and explanations.
 This is still very much WIP so your help and suggestions are very welcome if you think this project might be useful to you in some form.
 
 ## Todo

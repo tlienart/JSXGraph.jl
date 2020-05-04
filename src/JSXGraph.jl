@@ -26,7 +26,7 @@ export slider
 
 # objects
 export functiongraph, parametriccurve, pcurve, dataplot, plot
-export point
+export point, segment
 export scatterplot, scatter
 
 # -----------------------------------------------

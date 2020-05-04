@@ -6,23 +6,22 @@
     b ++ @jsf foo(x) = val(a)*x^2
     b ++ functiongraph(foo, dash=2)
     s = str(b, preamble=false)
-    @test isapproxstr(s, """(function(divID){
+    @test isapproxstr(s, """(function(){
         function foo(x){return (val(a)*Math.pow(x,2))};
-        brd = JXG.JSXGraph.initBoard(
-                divID,
+        var brd = JXG.JSXGraph.initBoard("brd",
                 {"boundingbox":[-10,10,10,-10],
                  "axis":false,
                  "showcopyright":false,
                  "shownavigation":true,
                  "showscreenshot":true});
-        a = brd.create(
+        var a = brd.create(
                 'slider',
                 [[1.0,-1.0],[5.0,-1.0],[0.0,1.5,3.0]],
                 {});
         brd.create(
                 'functiongraph',
                 [function(t){return foo(t);}, -10, 10],
-                {"dash":2});})('brd');
+                {"dash":2});})();
         """)
 end
 
@@ -39,19 +38,18 @@ end
     b ++ plot(f1, f2; a=0, b=fb, dash=2)
     b ++ point(pa, pb, withlabel=false)
     s = str(b, preamble=false)
-    @test isapproxstr(s, """(function(divID){
+    @test isapproxstr(s, """(function(){
         function f1(t){return (t-sin(t))};
         function f2(t){return (1-cos(t))};
         function fb(){return val(T)};
         function pa(){return f1(val(T))};
         function pb(){return f2(val(T))};
-        brd=JXG.JSXGraph.initBoard(
-                divID,
+        var brd=JXG.JSXGraph.initBoard("brd",
                 {"boundingbox":[-1.0,2.5,15.0,-0.5],
                 "axis":false,
                 "showcopyright":false,
                 "shownavigation":false});
-        T=brd.create(
+        var T=brd.create(
                 'slider',
                 [[0.0,2.1],[3.0,2.1],[0.0,3.141592653589793,15.707963267948966]], {});
         brd.create(
@@ -62,7 +60,7 @@ end
         brd.create(
                 'point',
                 [function(t){return pa(t);}, function(t){return pb(t);}],
-                {"withlabel":false});})('brd');
+                {"withlabel":false});})();
         """)
 end
 
@@ -73,14 +71,14 @@ end
     y = [1,2,3,4]
     b ++ plot(x, y)
     s = str(b, preamble=false)
-    @test isapproxstr(s, """(function(divID){
-        b=JXG.JSXGraph.initBoard(
-                divID,
+    @test isapproxstr(s, """(function(){
+        var b=JXG.JSXGraph.initBoard("b"
+                ,
                 {"boundingbox":[0,1,1,0],
                 "axis":false,
                 "showcopyright":false,
                 "shownavigation":false});
-        b.create('curve', [[1,2,3,4], [1,2,3,4]], {});})('b');
+        b.create('curve', [[1,2,3,4], [1,2,3,4]], {});})();
         """)
 end
 
@@ -98,18 +96,18 @@ end
     @jsf f2(t) = val(B)*sin(val(b)*t)
     b ++ plot(f1, f2, a=0, b=2π, strokecolor="#aa2233", strokewidth=3)
     s = str(b, preamble=false)
-    @test isapproxstr(s, """(function(divID){
-        brd=JXG.JSXGraph.initBoard(
-                divID,
+    @test isapproxstr(s, """(function(){
+        var brd=JXG.JSXGraph.initBoard("brd"
+                ,
                 {"boundingbox":[-12,10,12,-10],
                 "axis":false,
                 "showcopyright":false,
                 "shownavigation":false});
-        a=brd.create('slider', [[2,8],[6,8],[0,3,6]], {});
-        b=brd.create('slider', [[2,7],[6,7],[0,2,6]], {});
-        A=brd.create('slider', [[2,6],[6,6],[0,3,6]], {});
-        B=brd.create('slider', [[2,5],[6,5],[0,3,6]], {});
-        delta=brd.create('slider', [[2.0,4.0],[6.0,4.0],[0.0,0.0,3.141592653589793]], {"name":"&delta;"});
+        var a=brd.create('slider', [[2,8],[6,8],[0,3,6]], {});
+        var b=brd.create('slider', [[2,7],[6,7],[0,2,6]], {});
+        var A=brd.create('slider', [[2,6],[6,6],[0,3,6]], {});
+        var B=brd.create('slider', [[2,5],[6,5],[0,3,6]], {});
+        var delta=brd.create('slider', [[2.0,4.0],[6.0,4.0],[0.0,0.0,3.141592653589793]], {"name":"&delta;"});
         function f1(t){return (val(A)*sin(((val(a)*t)+val(delta))))};
         function f2(t){return (val(B)*sin((val(b)*t)))};
         brd.create(
@@ -117,6 +115,6 @@ end
                 [function(t){return f1(t);}, function(t){return f2(t);},
                  0, 6.283185307179586],
                 {"strokecolor":"#aa2233",
-                "strokewidth":3});})('brd');
+                "strokewidth":3});})();
         """)
 end

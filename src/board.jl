@@ -93,9 +93,8 @@ Base.empty!(b::Board) = (empty!(b.functions); empty!(b.objects); b)
 
 # ---------------------------------------------------------------------------
 
-const PREAMBLE =
-    "function val(x){return x.Value();};" *
-    prod("function $f(x){return Math.$f(x);};"
+const PREAMBLE = "function val(x){return x.Value();};" *
+         prod("function $f(x){return Math.$f(x);};"
          for f in (:abs, :acos, :acosh, :asin, :asinh,
                    :atan, :atanh, :ceil, :cos, :cosh, :exp,
                    :expm1, :floor, :hypot, :log, :log1p, :log10,
@@ -114,12 +113,12 @@ function str(b::Board; preamble=true)
     end
     # objects
     opts = get_opts(b)
-    jss = js"JXG.JSXGraph.initBoard(divID,$opts);"
-    print(io, "$(b.name)=" * jss.s)
+    jss = js"JXG.JSXGraph.initBoard($(b.name),$opts);"
+    print(io, "var $(b.name)=" * jss.s)
     for o in b.objects
         print(io, str(o, b))
     end
-    s = "(function(divID){" * String(take!(io)) * "})('$(b.name)');"
+    s = "(function(){" * String(take!(io)) * "})();"
     return s
 end
 

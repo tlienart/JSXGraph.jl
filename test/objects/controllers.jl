@@ -11,5 +11,5 @@
 
     b = board("brd")
     ss = J.str(s, b)
-    @test ss == "a=brd.create('slider', [[0.0,0.0],[3.0,0.0],[0.0,1.5,3.0]], {});"
+    @test ss == "var a=brd.create('slider', [[0.0,0.0],[3.0,0.0],[0.0,1.5,3.0]], {});"
 end

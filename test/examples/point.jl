@@ -8,15 +8,14 @@ begin
         point(0.7, m, strokecolor="blue")
         )
     s = str(b, preamble=false)
-    @test isapproxstr(s, """(function(divID){
+    @test isapproxstr(s, """(function(){
         function m(){return val(b)};
-        brd=JXG.JSXGraph.initBoard(
-                divID,
+        var brd=JXG.JSXGraph.initBoard("brd",
                 {"boundingbox":[0,1,1,0],
                 "axis":false,
                 "showcopyright":false,
                 "shownavigation":false});
-        s=brd.create(
+        var s=brd.create(
                 'slider',
                 [[0.1,0.1],[0.6,0.1],[0.0,0.2,1.0]], {});
         brd.create(
@@ -28,6 +27,6 @@ begin
         brd.create(
                 'point',
                 [0.7, function(t){return m(t);}],
-                {"strokecolor":"blue"});})('brd');
+                {"strokecolor":"blue"});})();
         """)
 end

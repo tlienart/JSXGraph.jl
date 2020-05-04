@@ -38,5 +38,5 @@ val(s::Slider) = s.vals[3][2] # midvalue of last vector [va, v0, vb]
 function str(s::Slider, b::Board)
     opts = get_opts(s)
     jss = js".create('slider', $(s.vals), $opts);"
-    return "$(s.name)=" * b.name * jss.s
+    return "var $(s.name)=" * b.name * jss.s
 end

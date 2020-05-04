@@ -48,7 +48,7 @@ end
 
     s = J.str(brd)
     @test occursin("function val(x)", s)
-    @test occursin(".initBoard(divID,", s)
+    @test occursin(".initBoard(\"brd\",", s)
     @test occursin(".create('slider',", s)
 
     # -- save

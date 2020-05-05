@@ -19,13 +19,14 @@ export board, gcb, (++)
 export save, str
 
 # defining functions
-export @jsf, val
+export @jsf, @js_str
+export val, valx, valy
 
 # controllers
 export slider
 
 # objects
-export functiongraph, parametriccurve, pcurve, dataplot, plot
+export functiongraph, parametriccurve, polarcurve, dataplot, plot
 export point
 export scatterplot, scatter
 
@@ -37,6 +38,8 @@ Base.length(o::Object) = 1
 
 # fallbacks overloaded by specific objects
 val(x) = 1
+valx(x) = 1
+valy(y) = 1
 
 function get_opts(x::Object)
     isnothing(x.opts) && return JSString("{}")

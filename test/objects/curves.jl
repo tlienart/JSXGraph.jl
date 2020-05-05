@@ -17,7 +17,7 @@ end
 @testset "ParamCurve" begin
     @jsf f1(t) = t - sin(t)
     @jsf f2(t) = 1 - cos(t)
-    pc = pcurve(f1, f2; a=0, b=10, dash=2)
+    pc = parametriccurve(f1, f2; a=0, b=10, dash=2)
     @test pc isa J.Curve
     @test pc.x isa J.JSFun
     @test pc.y isa J.JSFun

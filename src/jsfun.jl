@@ -62,7 +62,7 @@ function strf(f::JSFun, n::String="FN", b=nothing)
     fss  = js"function(t){return $jsn(t);}"
     return fs, fss, "INSERT_$n" => fn
 end
-function strf(x::Real, ::String="", b=nothing)
+function strf(x::Union{Real,AbstractArray{<:Real}}, ::String="", b=nothing)
     fss = JSString("$x")
     return "", fss, nothing
 end

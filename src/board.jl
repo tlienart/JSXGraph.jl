@@ -94,6 +94,8 @@ Base.empty!(b::Board) = (empty!(b.functions); empty!(b.objects); b)
 # ---------------------------------------------------------------------------
 
 const PREAMBLE = "function val(x){return x.Value();};" *
+         "function valx(p){return p.X();};" *
+         "function valy(p){return p.Y();};" *
          prod("function $f(x){return Math.$f(x);};"
          for f in (:abs, :acos, :acosh, :asin, :asinh,
                    :atan, :atanh, :ceil, :cos, :cosh, :exp,

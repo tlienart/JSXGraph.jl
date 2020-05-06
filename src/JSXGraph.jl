@@ -20,10 +20,10 @@ export save, str
 
 # defining functions
 export @jsf, @js_str
-export val, valx, valy
+export val, valx, valy, setx, sety
 
 # controllers
-export slider
+export slider, button
 
 # objects
 export functiongraph, parametriccurve, polarcurve, dataplot, plot
@@ -40,6 +40,8 @@ Base.length(o::Object) = 1
 val(x) = 1
 valx(x) = 1
 valy(y) = 1
+setx(o, x) = 1
+sety(o, y) = 1
 
 function get_opts(x::Object)
     isnothing(x.opts) && return JSString("{}")

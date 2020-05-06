@@ -94,14 +94,16 @@ Base.empty!(b::Board) = (empty!(b.functions); empty!(b.objects); b)
 # ---------------------------------------------------------------------------
 
 const PREAMBLE = "function val(x){return x.Value();};" *
-         "function valx(p){return p.X();};" *
-         "function valy(p){return p.Y();};" *
-         prod("function $f(x){return Math.$f(x);};"
-         for f in (:abs, :acos, :acosh, :asin, :asinh,
-                   :atan, :atanh, :ceil, :cos, :cosh, :exp,
-                   :expm1, :floor, :hypot, :log, :log1p, :log10,
-                   :log2, :max, :min, :round, :sign, :sin, :sinh,
-                   :sqrt, :tan, :tanh, :trunc)) *
+    "function valx(p){return p.X();};" *
+    "function valy(p){return p.Y();};" *
+    "function setxy(o,x,y){o.moveTo([x,y]);};" *
+    "function setx(o,x){setxy(o,x,o.Y());};" *
+    "function sety(o,y){setxy(o,o.X(),y);};" * prod(
+        "function $f(x){return Math.$f(x);};"
+        for f in (:abs, :acos, :acosh, :asin, :asinh, :atan, :atanh, :ceil,
+                  :cos, :cosh, :exp, :expm1, :floor, :hypot, :log, :log1p,
+                  :log10, :log2, :max, :min, :round, :sign, :sin, :sinh,
+                  :sqrt, :tan, :tanh, :trunc)) *
     "function rand(){return Math.random();};" *
     "const π=Math.PI;const ℯ=Math.E;const pi=Math.PI;"
 
